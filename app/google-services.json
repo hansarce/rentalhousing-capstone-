@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "128275592770",
+    "firebase_url": "https://rentalhousing-94382-default-rtdb.firebaseio.com",
+    "project_id": "rentalhousing-94382",
+    "storage_bucket": "rentalhousing-94382.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128275592770:android:7c877c0bc6bc73f56c1fdb",
+        "android_client_info": {
+          "package_name": "com.example.rentalhousing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128275592770-cnd4m23rjmf783to3a3vbgpq7vbv2iet.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rentalhousing",
+            "certificate_hash": "28c6b26647c3316589ec08cab23df45837c42d78"
+          }
+        },
+        {
+          "client_id": "128275592770-nvbkq71me95seci5365fv5s8t1uvu4s6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBODwrF0ZwcyYVsUHP2rXOJGojO4fe9EDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128275592770-nvbkq71me95seci5365fv5s8t1uvu4s6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
