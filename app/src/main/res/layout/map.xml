@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- OSMDroid MapView -->
-    <org.osmdroid.views.MapView
-        android:id="@+id/mapview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tilesource="Mapnik" />
 
     <!-- Example Button -->
     <Button
