@@ -16,11 +16,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import java.util.Arrays;
+import java.util.List;
 
 public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -29,6 +35,7 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private SearchView searchView;
     private Spinner filterSpinner;
+    private PlacesClient placesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +43,10 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
         setContentView(R.layout.activity_dashboard);
 
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyCMd2GBA4O1N6WREj91PDtc56p59udC6qU");
+            Places.initialize(getApplicationContext(), "YOUR_API_KEY");
         }
+
+        placesClient = Places.createClient(this);
 
         mapView = findViewById(R.id.mapView);
         searchView = findViewById(R.id.searchView);
@@ -59,20 +68,48 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Perform the final search
                 searchLocation(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Handle text changes
                 return false;
             }
         });
     }
 
     private void searchLocation(String location) {
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setQuery(location)
+                .build();
+
+        Task<FindAutocompletePredictionsResponse> task = placesClient.findAutocompletePredictions(request);
+
+        task.addOnSuccessListener(response -> {
+            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                String placeId = prediction.getPlaceId();
+                List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+                FetchPlaceRequest fetchPlaceRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
+
+                placesClient.fetchPlace(fetchPlaceRequest).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
+                    @Override
+                    public void onSuccess(FetchPlaceResponse fetchPlaceResponse) {
+                        Place place = fetchPlaceResponse.getPlace();
+                        LatLng latLng = place.getLatLng();
+                        if (latLng != null) {
+                            gMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
+                            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(DashBoard.this, "Place not found: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).addOnFailureListener(e -> Toast.makeText(DashBoard.this, "Autocomplete request failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void setupFilters() {
@@ -95,10 +132,8 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void applyFilter(String filter) {
-        // Clear existing markers
         gMap.clear();
 
-        // Apply filter logic here
         if (filter.equals("All")) {
             // Add all markers
         } else if (filter.equals("Restaurants")) {
@@ -111,9 +146,9 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        LatLng manila = new LatLng(14.5186, 121.0182);
-        gMap.addMarker(new MarkerOptions().position(manila).title("Marker in Manila"));
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(manila, 15));
+        LatLng pasay = new LatLng(14.5186, 121.0182);
+        gMap.addMarker(new MarkerOptions().position(pasay).title("Marker in Pasay"));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pasay, 15));
     }
 
     @Override

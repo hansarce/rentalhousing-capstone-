@@ -4,6 +4,11 @@
     <string-array name="filter_options">
         <item>All</item>
         <item>Restaurants</item>
-        <item>Parks</item>
+        <item>Hotels</item>
+        <item>Government Offices</item>
+        <item>Convenience Stores</item>
+        <item>Transport</item>
+        <item>Laundry Shops</item>
+        <item>Water Stations</item>
     </string-array>
 </resources>
