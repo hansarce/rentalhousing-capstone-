@@ -9,57 +9,42 @@ import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import java.util.Arrays;
-import java.util.List;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.views.MapView;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
 
-public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
+public class DashBoard extends AppCompatActivity {
 
     private MapView mapView;
-    private GoogleMap gMap;
-    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private SearchView searchView;
     private Spinner filterSpinner;
-    private PlacesClient placesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "YOUR_API_KEY");
-        }
-
-        placesClient = Places.createClient(this);
+        // Set the user agent value to avoid getting blocked by the OSM servers
+        Configuration.getInstance().setUserAgentValue(getPackageName());
 
         mapView = findViewById(R.id.mapView);
         searchView = findViewById(R.id.searchView);
         filterSpinner = findViewById(R.id.filterSpinner);
 
-        Bundle mapViewBundle = null;
-        if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
-        }
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setMultiTouchControls(true);
 
-        mapView.onCreate(mapViewBundle);
-        mapView.getMapAsync(this);
+        GeoPoint startPoint = new GeoPoint(14.5186, 121.0182);
+        mapView.getController().setZoom(15.0);
+        mapView.getController().setCenter(startPoint);
+
+        Marker startMarker = new Marker(mapView);
+        startMarker.setPosition(startPoint);
+        startMarker.setTitle("Marker in Pasay");
+        mapView.getOverlays().add(startMarker);
 
         setupSearch();
         setupFilters();
@@ -81,36 +66,8 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void searchLocation(String location) {
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setQuery(location)
-                .build();
-
-        Task<FindAutocompletePredictionsResponse> task = placesClient.findAutocompletePredictions(request);
-
-        task.addOnSuccessListener(response -> {
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                String placeId = prediction.getPlaceId();
-                List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
-                FetchPlaceRequest fetchPlaceRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
-
-                placesClient.fetchPlace(fetchPlaceRequest).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
-                    @Override
-                    public void onSuccess(FetchPlaceResponse fetchPlaceResponse) {
-                        Place place = fetchPlaceResponse.getPlace();
-                        LatLng latLng = place.getLatLng();
-                        if (latLng != null) {
-                            gMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-                            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(DashBoard.this, "Place not found: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }).addOnFailureListener(e -> Toast.makeText(DashBoard.this, "Autocomplete request failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        // Implement search functionality using a suitable API or library for geocoding
+        Toast.makeText(this, "Search function needs to be implemented", Toast.LENGTH_SHORT).show();
     }
 
     private void setupFilters() {
@@ -133,7 +90,7 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void applyFilter(String filter) {
-        gMap.clear();
+        mapView.getOverlays().clear();
 
         if (filter.equals("All")) {
             // Add all markers
@@ -142,14 +99,8 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
         } else if (filter.equals("Parks")) {
             // Add park markers
         }
-    }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        gMap = googleMap;
-        LatLng pasay = new LatLng(14.5186, 121.0182);
-        gMap.addMarker(new MarkerOptions().position(pasay).title("Marker in Pasay"));
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pasay, 15));
+        mapView.invalidate();
     }
 
     @Override
@@ -159,45 +110,24 @@ public class DashBoard extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
     protected void onPause() {
-        mapView.onPause();
         super.onPause();
+        mapView.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        mapView.onDestroy();
         super.onDestroy();
+        mapView.onDetach(); // Detach the mapView
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
-        if (mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
-        }
-
-        mapView.onSaveInstanceState(mapViewBundle);
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
     }
 }
