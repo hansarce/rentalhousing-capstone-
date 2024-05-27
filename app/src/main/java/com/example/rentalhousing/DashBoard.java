@@ -7,12 +7,16 @@ import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.osmdroid.config.Configuration;
-import org.osmdroid.views.MapView;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 public class DashBoard extends AppCompatActivity {
@@ -20,11 +24,16 @@ public class DashBoard extends AppCompatActivity {
     private MapView mapView;
     private SearchView searchView;
     private Spinner filterSpinner;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        bottomNavigationView = findViewById(R.id.bottomnavigationview);
+        bottomNavigationView.setBackground(null);
+        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
 
         // Set the user agent value to avoid getting blocked by the OSM servers
         Configuration.getInstance().setUserAgentValue(getPackageName());

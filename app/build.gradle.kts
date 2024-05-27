@@ -1,5 +1,4 @@
 plugins {
-
     id("com.android.application")
     id("com.google.gms.google-services")
 }
@@ -10,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.rentalhousing"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -31,20 +30,21 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.auth)
+    implementation(libs.car.ui.lib)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation (platform("com.google.firebase:firebase-bom:33.0.0"))
-    implementation ("com.google.firebase:firebase-analytics:22.0.0")
-    implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
-    implementation ("com.google.android.gms:play-services-auth:21.1.1")
-    implementation ("org.osmdroid:osmdroid-android:6.1.18")
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics:22.0.0")
+    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("com.google.android.material:material:1.3.0-alpha03")
-
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation ("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 }
