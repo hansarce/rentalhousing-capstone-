@@ -15,24 +15,24 @@
         android:paddingEnd="10dp"
         android:gravity="center_vertical">
 
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="329dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Profile"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
         <ImageView
             android:id="@+id/backprofile"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
+            android:paddingLeft="2dp"
             android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/outline_border_color_24" />
+            app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Edit Profile"
+            android:paddingRight="30dp"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <View
@@ -128,18 +128,19 @@
                     android:padding="10dp" />
 
 
+
+
                 <Button
-                    android:id="@+id/buttonCreateRentalHousing"
+                    android:id="@+id/buttonSaveChanges"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="20dp"
                     android:background="@drawable/roundedstroke"
-                    android:text="Create Rental Housing"
-                    android:textColor="@android:color/white" />
+                    android:text="Save Changes"
+                    android:textColor="@color/white" />
 
 
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+    </RelativeLayout>

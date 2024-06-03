@@ -18,7 +18,5 @@
 
     <item android:id="@+id/mLogout"
         android:title="Logout"
-        android:icon="@drawable/baseline_cancel_24"
-        />
-
+        android:icon="@drawable/baseline_cancel_24"/>
 </menu>

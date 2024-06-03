@@ -1,7 +1,9 @@
 package com.example.rentalhousing;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
@@ -85,7 +87,30 @@ public class DashBoard extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         customizeSearchView();
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.mHome) {
+                    startActivity(new Intent(DashBoard.this, Home.class));
+                    return true;
+                } else if (itemId == R.id.mMessages) {
+                    startActivity(new Intent(DashBoard.this, Messages.class));
+                    return true;
+                } else if (itemId == R.id.mProfile) {
+                    startActivity(new Intent(DashBoard.this, Profile.class));
+                    return true;
+                } else if (itemId == R.id.mLogout) {
+                    startActivity(new Intent(DashBoard.this, MainActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
+
+
+
 
     private void customizeSearchView() {
         int searchViewTextColor = Color.BLACK;
