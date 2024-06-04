@@ -32,7 +32,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"/>
-        <activity android:name=".Profile"/>
-        <activity android:name=".Messages"/>
+        <activity android:name=".EditProfile" />
+        <activity android:name=".RHInformation" />
+
+
     </application>
 </manifest>
