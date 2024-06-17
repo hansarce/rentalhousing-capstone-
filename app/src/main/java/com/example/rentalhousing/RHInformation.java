@@ -16,7 +16,7 @@ public class RHInformation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info1);
 
-        viewFlipper = findViewById(R.id.viewFlipper);
+      /*  viewFlipper = findViewById(R.id.viewFlipper);
 
         // Example buttons to switch between views
         Button nextButton = findViewById(R.id.buttonNext);
@@ -33,7 +33,7 @@ public class RHInformation extends AppCompatActivity {
             public void onClick(View v) {
                 viewFlipper.showPrevious();
             }
-        });
+        });*/
 
         // Set up any other necessary logic or UI components for the different layouts
     }
