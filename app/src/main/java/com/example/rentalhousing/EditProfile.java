@@ -95,7 +95,7 @@ public class EditProfile extends AppCompatActivity {
 
     private StorageReference getCurrentProfilePicStorageRef() {
         if (currentUserID != null) {
-            return FirebaseStorage.getInstance().getReference().child("profilepic").child(currentUserID);
+            return FirebaseStorage.getInstance().getReference().child("profile").child(currentUserID);
         }
         return null;
     }
@@ -145,6 +145,7 @@ public class EditProfile extends AppCompatActivity {
             return;
         }
 
+        // Save profile text data first
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
         userData.put("contactNumber", contactNumber);
@@ -156,14 +157,27 @@ public class EditProfile extends AppCompatActivity {
             db.collection("users")
                     .document(currentUserID)
                     .set(userData, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "Profile data saved to Firestore");
-                        Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
-                        startActivity(intent);
-                    })
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Profile data saved to Firestore"))
                     .addOnFailureListener(e -> Log.e(TAG, "Failed to save profile data to Firestore", e));
         } else {
             Log.e(TAG, "User ID is null, cannot save to Firestore");
+        }
+
+        // Save profile image if selected
+        if (selectedImageUri != null) {
+            StorageReference profilePicRef = getCurrentProfilePicStorageRef();
+            if (profilePicRef != null) {
+                profilePicRef.putFile(selectedImageUri)
+                        .addOnSuccessListener(taskSnapshot -> profilePicRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String photoUrl = uri.toString();
+                            saveProfilePicUrlToFirestore(photoUrl);
+                        }))
+                        .addOnFailureListener(e -> Log.e(TAG, "Failed to upload profile picture", e));
+            }
+        } else {
+            // If no new image is selected, just go back to the profile
+            Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
+            startActivity(intent);
         }
     }
 

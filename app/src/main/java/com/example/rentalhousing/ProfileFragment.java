@@ -127,7 +127,7 @@ public class ProfileFragment extends Fragment {
 
     private StorageReference getCurrentProfilePicStorageRef() {
         if (currentUserID != null) {
-            return FirebaseStorage.getInstance().getReference().child("profilepic").child(currentUserID);
+            return FirebaseStorage.getInstance().getReference().child("profile").child(currentUserID);
         }
         return null;
     }

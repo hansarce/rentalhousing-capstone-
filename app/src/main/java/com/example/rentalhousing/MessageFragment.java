@@ -1,24 +1,51 @@
 package com.example.rentalhousing;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MessageFragment extends Fragment {
 
-public MessageFragment(){
+    private EditText searchinput;
+    private RecyclerView recyclerViewsearch;
 
-}
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_message, container, false);
+    public MessageFragment() {
+        // Required empty public constructor
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_message, container, false);
+
+        searchinput = view.findViewById(R.id.searchbarinput);
+        recyclerViewsearch = view.findViewById(R.id.recyclerviewchat);
+
+
+        recyclerViewsearch.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        searchinput.setOnClickListener(v -> {
+            String searchTerm = searchinput.getText().toString();
+            if (searchTerm.isEmpty() || searchTerm.length() < 3) {
+                searchinput.setError("Invalid Username");
+
+            }
+
+            setupSearchRecyclerView(searchTerm);
+        });
+
+
+        return view;
+    }
+
+    private void setupSearchRecyclerView()
 }

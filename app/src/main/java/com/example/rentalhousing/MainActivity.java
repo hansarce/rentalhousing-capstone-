@@ -1,16 +1,23 @@
 package com.example.rentalhousing;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,12 +30,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1234;
     private Button button;
     private GoogleSignInClient client;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +82,17 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Intent intent = new Intent(getApplicationContext(), DashBoard.class);
-                                        startActivity(intent);
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        if (user != null) {
+                                            // Get user information from GoogleSignInAccount
+                                            String email = account.getEmail();
+                                            String name = account.getDisplayName();
+                                            Uri photoUrl = account.getPhotoUrl();
+
+                                            checkUserInFirestore(user.getUid(), email, name, photoUrl);
+                                        }
                                     } else {
-                                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -88,8 +109,78 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            Intent intent = new Intent(this, DashBoard.class);
-            startActivity(intent);
+            checkUserInFirestore(user.getUid(), null, null, null);
         }
+    }
+
+    private void checkUserInFirestore(String userId, String email, String name, Uri photoUrl) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // User exists, go to dashboard
+                    Intent intent = new Intent(MainActivity.this, DashBoard.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // User does not exist, save user info
+                    if (email != null && name != null && photoUrl != null) {
+                        saveUserInfoToFirestore(userId, email, name);
+                        uploadProfilePicture(userId, photoUrl);
+                    }
+                }
+            } else {
+                Toast.makeText(MainActivity.this, "Failed to check user existence", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveUserInfoToFirestore(String userId, String email, String name) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", email);
+        user.put("name", name);
+
+        db.collection("users")
+                .document(userId)
+                .set(user)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(MainActivity.this, "User information saved", Toast.LENGTH_SHORT).show();
+                        // After saving user info, go to dashboard
+                        Intent intent = new Intent(MainActivity.this, DashBoard.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to save user information", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void uploadProfilePicture(String userId, Uri photoUrl) {
+        // Download the image using Glide to a local file
+        Glide.with(this)
+                .asFile()
+                .load(photoUrl)
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                        StorageReference profilePicRef = storageRef.child("profile/" + userId + ".jpg");
+
+                        profilePicRef.putFile(Uri.fromFile(resource))
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    Toast.makeText(MainActivity.this, "Profile picture uploaded", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e(TAG, "Failed to upload profile picture: " + e.getMessage());
+                                });
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
     }
 }

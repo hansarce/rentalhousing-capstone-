@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -26,6 +27,7 @@ import com.example.rentalhousing.SearchResult;
 import com.example.rentalhousing.databinding.ActivityDashboardBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -73,7 +75,8 @@ public class DashBoard extends AppCompatActivity {
                 replaceFragment(new ProfileFragment());
                 return true;
             } else if (itemId == R.id.mLogout) {
-                startActivity(new Intent(DashBoard.this, MainActivity.class));
+              showLogoutConfirmationDialog();
+              return true;
 
             }
             return false;
@@ -90,6 +93,23 @@ public class DashBoard extends AppCompatActivity {
     }
 
 
+    private void showLogoutConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Sign out from Firebase
+                    FirebaseAuth.getInstance().signOut();
+
+                    // Redirect to MainActivity
+                    Intent intent = new Intent(DashBoard.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish(); // Finish the current activity
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
 
 
