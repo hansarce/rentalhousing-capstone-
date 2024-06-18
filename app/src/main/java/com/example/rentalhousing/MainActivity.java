@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1234;
     private Button button;
     private GoogleSignInClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

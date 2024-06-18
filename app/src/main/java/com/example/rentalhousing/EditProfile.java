@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,9 +27,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -48,26 +46,24 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editprofile);
 
+        // Initialize views
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextContactNumber = findViewById(R.id.editTextContactNumber);
         editTextCity = findViewById(R.id.editTextCity);
         editTextBirthday = findViewById(R.id.editTextBirthday);
-
-        fetchUserData();
+        returnButton = findViewById(R.id.returntoprofile);
+        profilePic = findViewById(R.id.profilepicedit);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             currentUserID = currentUser.getUid();
         } else {
-            // Handle the case where the user is not authenticated
             Log.e(TAG, "User is not authenticated");
             finish(); // Close the activity
             return;
         }
 
-        // Initialize views
-        returnButton = findViewById(R.id.returntoprofile);
-        profilePic = findViewById(R.id.profilepicedit);
+        fetchUserData();
 
         imagePickLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -82,25 +78,19 @@ public class EditProfile extends AppCompatActivity {
 
         profilePic.setOnClickListener(v -> {
             ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
-                    .createIntent(new Function1<Intent, Unit>() {
-                        @Override
-                        public Unit invoke(Intent intent) {
-                            imagePickLauncher.launch(intent);
-                            return null;
-                        }
+                    .createIntent(intent -> {
+                        imagePickLauncher.launch(intent);
+                        return null;
                     });
         });
 
         returnButton.setOnClickListener(v -> {
-            // Assuming ProfileActivity is the correct activity
             Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
             startActivity(intent);
         });
 
         Button saveButton = findViewById(R.id.buttonSaveChanges);
-        saveButton.setOnClickListener(v -> {
-            uploadProfileDataToFirestore();
-        });
+        saveButton.setOnClickListener(v -> uploadProfileDataToFirestore());
     }
 
     private StorageReference getCurrentProfilePicStorageRef() {
@@ -110,46 +100,72 @@ public class EditProfile extends AppCompatActivity {
         return null;
     }
 
+    private void fetchUserData() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if (currentUserID != null) {
+            db.collection("users")
+                    .document(currentUserID)
+                    .get()
+                    .addOnSuccessListener(this::populateUserData)
+                    .addOnFailureListener(e -> Log.e(TAG, "Error fetching document", e));
+        } else {
+            Log.e(TAG, "User ID is null, cannot fetch from Firestore");
+        }
+    }
+
+    private void populateUserData(DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists()) {
+            editTextEmail.setText(documentSnapshot.getString("email"));
+            editTextContactNumber.setText(documentSnapshot.getString("contactNumber"));
+            editTextCity.setText(documentSnapshot.getString("city"));
+            editTextBirthday.setText(documentSnapshot.getString("birthday"));
+
+            getCurrentProfilePicStorageRef().getDownloadUrl().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri uri = task.getResult();
+                    Glide.with(EditProfile.this).load(uri).circleCrop().into(profilePic);
+                } else {
+                    profilePic.setImageResource(R.drawable.baseline_account_circle_24);
+                }
+            });
+        } else {
+            Log.e(TAG, "Document does not exist");
+        }
+    }
+
     private void uploadProfileDataToFirestore() {
         String email = editTextEmail.getText().toString().trim();
         String contactNumber = editTextContactNumber.getText().toString().trim();
         String city = editTextCity.getText().toString().trim();
         String birthday = editTextBirthday.getText().toString().trim();
 
-        // Ensure all fields are filled
         if (email.isEmpty() || contactNumber.isEmpty() || city.isEmpty() || birthday.isEmpty()) {
-            // Handle case where any field is empty
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Save data to Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
         userData.put("contactNumber", contactNumber);
         userData.put("city", city);
         userData.put("birthday", birthday);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (currentUserID != null) {
             db.collection("users")
                     .document(currentUserID)
                     .set(userData, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {
                         Log.d(TAG, "Profile data saved to Firestore");
-                        // Optionally, show success message or navigate back to profile
                         Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
                         startActivity(intent);
                     })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to save profile data to Firestore", e);
-                        // Handle failure
-                    });
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save profile data to Firestore", e));
         } else {
             Log.e(TAG, "User ID is null, cannot save to Firestore");
         }
     }
-
 
     private void saveProfilePicUrlToFirestore(String url) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -162,7 +178,6 @@ public class EditProfile extends AppCompatActivity {
                     .set(user, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {
                         Log.d(TAG, "Profile pic URL saved to Firestore");
-                        // Start ProfileFragment activity after successful update
                         Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
                         startActivity(intent);
                     })
@@ -171,56 +186,4 @@ public class EditProfile extends AppCompatActivity {
             Log.e(TAG, "User ID is null, cannot save to Firestore");
         }
     }
-
-    private void fetchUserData() {
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Check if currentUserID is not null
-        if (currentUserID != null) {
-            db.collection("users")
-                    .document(currentUserID)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        // Check if the document exists in Firestore
-                        if (documentSnapshot.exists()) {
-                            // Populate EditText fields with existing data
-                            String email = documentSnapshot.getString("email");
-                            String contactNumber = documentSnapshot.getString("contactNumber");
-                            String city = documentSnapshot.getString("city");
-                            String birthday = documentSnapshot.getString("birthday");
-
-                            // Set fetched data to EditText fields
-                            editTextEmail.setText(email);
-                            editTextContactNumber.setText(contactNumber);
-                            editTextCity.setText(city);
-                            editTextBirthday.setText(birthday);
-
-                            // Load profile picture if profilePicUrl exists
-                            String profilePicUrl = documentSnapshot.getString("profilePicUrl");
-                            if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-                                Glide.with(this)
-                                        .load(profilePicUrl)
-                                        .circleCrop()
-                                        .into(profilePic);
-                            } else {
-                                // If no profile picture is set, load a placeholder or default image
-                                profilePic.setImageResource(R.drawable.baseline_account_circle_24);
-                            }
-                        } else {
-                            Log.e(TAG, "Document does not exist");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Error fetching document", e);
-                        // Handle error fetching document from Firestore
-                    });
-        } else {
-
-            Log.e(TAG, "User ID is null, cannot fetch from Firestore");
-
-        }
-    }
-
-
 }
