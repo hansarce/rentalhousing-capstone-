@@ -1,17 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeFragment"
     android:background="@color/white">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Home"
-        android:textSize="200dp"/>
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:background="@drawable/strokeonly"
+            android:layout_marginBottom="20dp">
+
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:backgroundTint="@color/black"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Toto's Rental Housing"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:orientation="horizontal"
+            android:background="@drawable/strokeonly"
+            android:layout_marginBottom="20dp">
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:orientation="horizontal"
+            android:background="@drawable/strokeonly"
+            android:layout_marginBottom="20dp">
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:orientation="horizontal"
+            android:background="@drawable/strokeonly"
+            android:layout_marginBottom="20dp">
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

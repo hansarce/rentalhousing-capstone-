@@ -1,23 +1,26 @@
 package com.example.rentalhousing;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ViewFlipper;
 
-public class rhinformation1 extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class rhinformation2 extends AppCompatActivity {
+
+    private ViewFlipper viewFlipper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.info1);
-
-        Button buttonNext = findViewById(R.id.next1);
+        setContentView(R.layout.info2);
+        Button buttonNext = findViewById(R.id.next2);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(rhinformation1.this, rhinformation2.class);
+                Intent intent = new Intent(rhinformation2.this, rhinformation3.class);
                 startActivity(intent);
             }
         });

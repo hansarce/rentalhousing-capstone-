@@ -33,7 +33,9 @@
         </activity>
         <activity android:name=".DashBoard"/>
         <activity android:name=".EditProfile" />
-        <activity android:name=".RHInformation" />
+        <activity android:name=".rhinformation1" />
+        <activity android:name=".rhinformation2" />
+        <activity android:name=".rhinformation3" />
 
 
     </application>

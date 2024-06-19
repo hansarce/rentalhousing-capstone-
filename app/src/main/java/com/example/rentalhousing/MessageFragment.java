@@ -18,7 +18,7 @@ public class MessageFragment extends Fragment {
     private RecyclerView recyclerViewsearch;
 
     public MessageFragment() {
-        // Required empty public constructor
+
     }
 
     @Nullable
@@ -26,7 +26,7 @@ public class MessageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
 
-        searchinput = view.findViewById(R.id.searchbarinput);
+        /*searchinput = view.findViewById(R.id.searchbarinput);
         recyclerViewsearch = view.findViewById(R.id.recyclerviewchat);
 
 
@@ -41,11 +41,13 @@ public class MessageFragment extends Fragment {
             }
 
             setupSearchRecyclerView(searchTerm);
-        });
+        });*/
 
 
         return view;
     }
 
-    private void setupSearchRecyclerView()
+
+  // private void setupSearchRecyclerView()
+
 }
