@@ -79,12 +79,29 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/strokeonly"
-                    android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:padding="10dp"
                     android:enabled="false"
                     android:focusable="false" />
 
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:padding="5dp"
+                    android:text="Name" />
+
+                <EditText
+                    android:id="@+id/editname"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint=""
+                    android:background="@drawable/strokeonly"
+
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -99,25 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginBottom="10dp"
-                    android:hint="Contact Number"
-                    android:background="@drawable/strokeonly"
                     android:inputType="phone"
-                    android:padding="10dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:padding="5dp"
-                    android:text="City" />
-
-                <EditText
-                    android:id="@+id/editTextCity"
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:hint="City"
                     android:background="@drawable/strokeonly"
                     android:padding="10dp" />
 
@@ -138,6 +137,7 @@
                     android:inputType="date"
                     android:background="@drawable/strokeonly"
                     android:padding="10dp" />
+
 
 
 

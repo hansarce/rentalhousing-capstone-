@@ -56,12 +56,23 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp">
 
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="#2196F3"
+                android:padding="5dp"
+                android:text="Verify Account" />
+
             <ImageView
                 android:id="@+id/profilepic"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:background="@drawable/circular_bg"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:src="@drawable/baseline_account_circle_24" />
 
@@ -89,10 +100,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:padding="5dp"
-                android:text="Contact Number" />
+                android:text="Name" />
 
             <TextView
-                android:id="@+id/contactnumber"
+                android:id="@+id/name"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -105,10 +116,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:padding="5dp"
-                android:text="City" />
+                android:text="Contact Number" />
 
             <TextView
-                android:id="@+id/city"
+                android:id="@+id/contactnumber"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"

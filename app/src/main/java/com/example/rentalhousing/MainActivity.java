@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     // User exists, go to dashboard
-                    Intent intent = new Intent(MainActivity.this, DashBoard.class);
+                    Intent intent = new Intent(MainActivity.this, twofactauth.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(MainActivity.this, "User information saved", Toast.LENGTH_SHORT).show();
                         // After saving user info, go to dashboard
-                        Intent intent = new Intent(MainActivity.this, DashBoard.class);
+                        Intent intent = new Intent(MainActivity.this, twofactauth.class);
                         startActivity(intent);
                         finish();
                     } else {

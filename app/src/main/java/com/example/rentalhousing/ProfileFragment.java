@@ -28,7 +28,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
     private ImageView profilePic;
-    private TextView email, contactNumber, city, birthday;
+    private TextView email, contactNumber, name , birthday;
     private String currentUserID;
 
     @Nullable
@@ -47,9 +47,10 @@ public class ProfileFragment extends Fragment {
 
     private void initializeViews(View view) {
         profilePic = view.findViewById(R.id.profilepic);
+        name = view.findViewById(R.id.name);
         email = view.findViewById(R.id.email);
+
         contactNumber = view.findViewById(R.id.contactnumber);
-        city = view.findViewById(R.id.city);
         birthday = view.findViewById(R.id.birthday);
     }
 
@@ -100,8 +101,9 @@ public class ProfileFragment extends Fragment {
     private void populateUserData(DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists()) {
             email.setText(documentSnapshot.getString("email"));
+            name.setText(documentSnapshot.getString("name"));
             contactNumber.setText(documentSnapshot.getString("contactNumber"));
-            city.setText(documentSnapshot.getString("city"));
+
             birthday.setText(documentSnapshot.getString("birthday"));
 
             loadProfilePicture();

@@ -37,7 +37,7 @@ public class EditProfile extends AppCompatActivity {
 
     private ImageView returnButton;
     private ImageView profilePic;
-    private EditText editTextEmail, editTextContactNumber, editTextCity, editTextBirthday;
+    private EditText editTextEmail, editTextContactNumber, editName, editTextBirthday;
 
     private String currentUserID;
 
@@ -49,7 +49,7 @@ public class EditProfile extends AppCompatActivity {
         // Initialize views
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextContactNumber = findViewById(R.id.editTextContactNumber);
-        editTextCity = findViewById(R.id.editTextCity);
+        editName = findViewById(R.id.editname);
         editTextBirthday = findViewById(R.id.editTextBirthday);
         returnButton = findViewById(R.id.returntoprofile);
         profilePic = findViewById(R.id.profilepicedit);
@@ -117,8 +117,8 @@ public class EditProfile extends AppCompatActivity {
     private void populateUserData(DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists()) {
             editTextEmail.setText(documentSnapshot.getString("email"));
+            editName.setText(documentSnapshot.getString("Name"));
             editTextContactNumber.setText(documentSnapshot.getString("contactNumber"));
-            editTextCity.setText(documentSnapshot.getString("city"));
             editTextBirthday.setText(documentSnapshot.getString("birthday"));
 
             getCurrentProfilePicStorageRef().getDownloadUrl().addOnCompleteListener(task -> {
@@ -126,8 +126,12 @@ public class EditProfile extends AppCompatActivity {
                     Uri uri = task.getResult();
                     Glide.with(EditProfile.this).load(uri).circleCrop().into(profilePic);
                 } else {
+                    Log.e(TAG, "Profile picture not found", task.getException());
                     profilePic.setImageResource(R.drawable.baseline_account_circle_24);
                 }
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "Error fetching profile picture", e);
+                profilePic.setImageResource(R.drawable.baseline_account_circle_24);
             });
         } else {
             Log.e(TAG, "Document does not exist");
@@ -136,11 +140,11 @@ public class EditProfile extends AppCompatActivity {
 
     private void uploadProfileDataToFirestore() {
         String email = editTextEmail.getText().toString().trim();
+        String edtname = editName.getText().toString().trim();
         String contactNumber = editTextContactNumber.getText().toString().trim();
-        String city = editTextCity.getText().toString().trim();
         String birthday = editTextBirthday.getText().toString().trim();
 
-        if (email.isEmpty() || contactNumber.isEmpty() || city.isEmpty() || birthday.isEmpty()) {
+        if (email.isEmpty() || edtname.isEmpty() || contactNumber.isEmpty() || birthday.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -148,8 +152,8 @@ public class EditProfile extends AppCompatActivity {
         // Save profile text data first
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", email);
+        userData.put("Name", edtname);
         userData.put("contactNumber", contactNumber);
-        userData.put("city", city);
         userData.put("birthday", birthday);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();

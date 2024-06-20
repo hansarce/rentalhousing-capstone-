@@ -36,6 +36,8 @@
         <activity android:name=".rhinformation1" />
         <activity android:name=".rhinformation2" />
         <activity android:name=".rhinformation3" />
+        <activity android:name=".twofactauth" />
+
 
 
     </application>
