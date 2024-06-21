@@ -37,6 +37,12 @@
         <activity android:name=".rhinformation2" />
         <activity android:name=".rhinformation3" />
         <activity android:name=".twofactauth" />
+        <activity android:name=".SendOTPActivity" />
+        <activity android:name=".VerifyOTPActivity" />
+        <activity android:name=".signupinformation" />
+        <activity android:name=".pincode" />
+        <activity android:name=".loginpincode" />
+        <activity android:name=".welcome" />
 
 
 

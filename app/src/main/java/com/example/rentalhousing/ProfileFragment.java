@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +29,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
     private ImageView profilePic;
-    private TextView email, contactNumber, name , birthday;
+    private TextView name, email,  birthday;
     private String currentUserID;
 
     @Nullable
@@ -36,22 +37,25 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        initializeViews(view);
-        fetchCurrentUser();
-        setButtonListeners(view);
-
-        fetchUserData();
-
-        return view;
-    }
-
-    private void initializeViews(View view) {
+        // Initialize views
         profilePic = view.findViewById(R.id.profilepic);
         name = view.findViewById(R.id.name);
         email = view.findViewById(R.id.email);
 
-        contactNumber = view.findViewById(R.id.contactnumber);
         birthday = view.findViewById(R.id.birthday);
+
+        // Fetch current user data
+        fetchCurrentUser();
+
+
+
+        Button createRentalHousingButton = view.findViewById(R.id.buttonCreateRentalHousing);
+        createRentalHousingButton.setOnClickListener(v -> navigateToRentalHousingInfo());
+
+        // Fetch and populate user data
+        fetchUserData();
+
+        return view;
     }
 
     private void fetchCurrentUser() {
@@ -66,27 +70,8 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void setButtonListeners(View view) {
-        ImageView backProfileImageView = view.findViewById(R.id.backprofile);
-        Button buttonRentalHousing = view.findViewById(R.id.buttonCreateRentalHousing);
-
-        backProfileImageView.setOnClickListener(v -> navigateToEditProfile());
-        buttonRentalHousing.setOnClickListener(v -> navigateToRentalHousingInfo());
-    }
-
-    private void navigateToEditProfile() {
-        Intent intent = new Intent(getActivity(), EditProfile.class);
-        startActivity(intent);
-    }
-
-    private void navigateToRentalHousingInfo() {
-        Intent intent = new Intent(getActivity(), rhinformation1.class);
-        startActivity(intent);
-    }
-
     private void fetchUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         if (currentUserID != null) {
             db.collection("users")
                     .document(currentUserID)
@@ -100,36 +85,60 @@ public class ProfileFragment extends Fragment {
 
     private void populateUserData(DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists()) {
-            email.setText(documentSnapshot.getString("email"));
-            name.setText(documentSnapshot.getString("name"));
-            contactNumber.setText(documentSnapshot.getString("contactNumber"));
+            // Get email from Firebase Authentication
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                email.setText(currentUser.getEmail());
+            } else {
+                Log.e(TAG, "Current user is null");
+            }
 
+            // Populate other fields from Firestore
+            name.setText(documentSnapshot.getString("Name"));
             birthday.setText(documentSnapshot.getString("birthday"));
 
+            // Load profile picture if available
             loadProfilePicture();
         } else {
             Log.e(TAG, "Document does not exist");
         }
     }
 
+
     private void loadProfilePicture() {
         StorageReference profilePicRef = getCurrentProfilePicStorageRef();
         if (profilePicRef != null) {
-            profilePicRef.getDownloadUrl().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    Uri uri = task.getResult();
-                    Glide.with(this).load(uri).circleCrop().into(profilePic);
-                } else {
-                    profilePic.setImageResource(R.drawable.baseline_account_circle_24);
-                }
+            profilePicRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Glide.with(requireContext())
+                        .load(uri)
+                        .circleCrop()
+                        .placeholder(R.drawable.baseline_account_circle_24)
+                        .error(R.drawable.baseline_account_circle_24)
+                        .into(profilePic);
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to fetch profile picture", e);
+                profilePic.setImageResource(R.drawable.baseline_account_circle_24);
             });
+        } else {
+            Log.e(TAG, "Profile picture reference is null");
+            profilePic.setImageResource(R.drawable.baseline_account_circle_24);
         }
     }
 
     private StorageReference getCurrentProfilePicStorageRef() {
         if (currentUserID != null) {
-            return FirebaseStorage.getInstance().getReference().child("profile").child(currentUserID);
+            return FirebaseStorage.getInstance().getReference()
+                    .child("profile_pictures")
+                    .child(currentUserID);
+        } else {
+            Log.e(TAG, "Current user ID is null");
+            return null;
         }
-        return null;
+    }
+
+
+    private void navigateToRentalHousingInfo() {
+        Intent intent = new Intent(requireActivity(), rhinformation1.class);
+        startActivity(intent);
     }
 }
