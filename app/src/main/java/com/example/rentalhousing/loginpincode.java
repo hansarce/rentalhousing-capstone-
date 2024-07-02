@@ -145,6 +145,10 @@ public class loginpincode extends AppCompatActivity {
                     .set(lockoutInfo, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> Toast.makeText(this, "Too many attempts. Account locked for 1 hour.", Toast.LENGTH_LONG).show())
                     .addOnFailureListener(e -> Toast.makeText(this, "Error updating lockout info.", Toast.LENGTH_SHORT).show());
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+
         } else {
             Toast.makeText(this, "Incorrect PIN. Attempt " + failedAttempts + " of " + MAX_ATTEMPTS, Toast.LENGTH_SHORT).show();
         }
