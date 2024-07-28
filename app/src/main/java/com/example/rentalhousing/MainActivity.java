@@ -18,12 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
-
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.AuthResult;  // Ensure this import is present
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 1234;
     private GoogleSignInClient client;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signuplayout);
+
+        mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -47,7 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
         client = GoogleSignIn.getClient(this, options);
 
-        signIn();
+        // Check if the user is already authenticated
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            checkUserInFirestore(currentUser.getUid());
+        } else {
+            signIn();
+        }
     }
 
     private void signIn() {
@@ -69,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
                     // Proceed with Firebase authentication using the ID token
                     AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-                    FirebaseAuth.getInstance().signInWithCredential(credential)
+                    mAuth.signInWithCredential(credential)
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success
-                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        FirebaseUser user = mAuth.getCurrentUser();
                                         if (user != null) {
                                             // Check if user exists in Firestore
                                             checkUserInFirestore(user.getUid());
@@ -103,14 +107,13 @@ public class MainActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-
+                    // User exists, go to loginpincode activity
                     startActivity(new Intent(MainActivity.this, loginpincode.class));
-                    finish();
                 } else {
-                    // User does not exist, go to SignUpInformationActivity
+                    // User does not exist, go to signupinformation activity
                     startActivity(new Intent(MainActivity.this, signupinformation.class));
-                    finish();
                 }
+                finish();
             } else {
                 Toast.makeText(MainActivity.this, "Failed to check user existence", Toast.LENGTH_SHORT).show();
                 finish();

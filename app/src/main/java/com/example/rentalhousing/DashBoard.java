@@ -1,6 +1,7 @@
 package com.example.rentalhousing;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -101,7 +102,10 @@ public class DashBoard extends AppCompatActivity {
                     // Sign out from Firebase
                     FirebaseAuth.getInstance().signOut();
 
-                    // Redirect to MainActivity
+                    // Clear any stored user data (if any)
+                    clearStoredUserData();
+
+                    // Redirect to MainActivity (sign-in screen)
                     Intent intent = new Intent(DashBoard.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -109,6 +113,14 @@ public class DashBoard extends AppCompatActivity {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    private void clearStoredUserData() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
 
