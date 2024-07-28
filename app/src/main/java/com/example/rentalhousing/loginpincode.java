@@ -31,6 +31,7 @@ public class loginpincode extends AppCompatActivity {
 
     private EditText pinCodeEditText;
     private TextView statusTextView;
+    private pincirvleview pinCircleView;
     private String currentUserID;
 
     private int failedAttempts = 0;
@@ -43,6 +44,7 @@ public class loginpincode extends AppCompatActivity {
 
         pinCodeEditText = findViewById(R.id.pin_code_edit_text);
         statusTextView = findViewById(R.id.status_text_view);
+        pinCircleView = findViewById(R.id.pinCircleView);
 
         fetchCurrentUser();
         setButtonListeners();
@@ -56,6 +58,9 @@ public class loginpincode extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (s.length() <= 4) {
+                    pinCircleView.setFilledCircles(s.length());
+                }
                 if (s.length() == 4) {
                     String inputPin = s.toString();
                     verifyPasscode(inputPin);

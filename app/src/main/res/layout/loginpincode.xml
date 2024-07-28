@@ -11,12 +11,23 @@
         android:id="@+id/inner_constraint_layout"
         android:layout_width="428dp"
         android:layout_height="354dp"
-        android:background="#271E37"
+        android:background="@color/text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.example.rentalhousing.pincirvleview
+            android:id="@+id/pinCircleView"
+            android:layout_width="271dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="76dp"
+            android:paddingLeft="85dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_text_view"
+            app:layout_constraintVertical_bias="0.384" />
         <TextView
             android:id="@+id/status_text_view"
             android:layout_width="match_parent"
@@ -35,8 +46,8 @@
 
         <EditText
             android:id="@+id/pin_code_edit_text"
-            android:layout_width="293dp"
-            android:layout_height="66dp"
+            android:layout_width="257dp"
+            android:layout_height="39dp"
             android:background="@drawable/strokeonly"
             android:backgroundTint="#271E37"
             android:gravity="center"
@@ -47,6 +58,7 @@
             android:textColor="@color/white"
             android:textCursorDrawable="@null"
             android:textSize="30sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +70,7 @@
             android:id="@+id/imageButton"
             android:layout_width="900px"
             android:layout_height="330px"
-            android:background="#271E37"
+            android:background="@color/text_primary"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/status_text_view"
             app:layout_constraintEnd_toEndOf="parent"
