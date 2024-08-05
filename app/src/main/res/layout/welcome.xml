@@ -10,7 +10,7 @@
         android:id="@+id/conntineee"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/greenroundedstroke"
+        android:background="@drawable/grayroundedstroke"
         android:text="Continue"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

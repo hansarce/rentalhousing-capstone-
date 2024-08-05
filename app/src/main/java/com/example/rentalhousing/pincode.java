@@ -28,6 +28,7 @@ public class pincode extends AppCompatActivity {
     private static final String TAG = "pincodeActivity";
     private EditText pinCodeEditText;
     private TextView firstInputTextView;
+    private pincirvleview pinCircleView;
     private String firstInput = "";
     private String secondInput = "";
     private boolean isFirstInputComplete = false;
@@ -40,6 +41,7 @@ public class pincode extends AppCompatActivity {
 
         pinCodeEditText = findViewById(R.id.pin_code_edit_text);
         firstInputTextView = findViewById(R.id.firstinput);
+        pinCircleView = findViewById(R.id.pinCircleView);
 
         fetchCurrentUser();
         setButtonListeners();
@@ -53,12 +55,16 @@ public class pincode extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (s.length() <= 4) {
+                    pinCircleView.setFilledCircles(s.length());
+                }
                 if (s.length() == 4) {
                     if (!isFirstInputComplete) {
                         firstInput = s.toString();
                         pinCodeEditText.setText("");
                         firstInputTextView.setText("Confirm your passcode");
                         isFirstInputComplete = true;
+                        pinCircleView.setFilledCircles(0);
                     } else {
                         secondInput = s.toString();
                         if (firstInput.equals(secondInput)) {
@@ -68,6 +74,7 @@ public class pincode extends AppCompatActivity {
                             pinCodeEditText.setText("");
                             firstInputTextView.setText("Input desired passcode");
                             isFirstInputComplete = false;
+                            pinCircleView.setFilledCircles(0);
                         }
                     }
                 }
