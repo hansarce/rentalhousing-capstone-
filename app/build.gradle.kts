@@ -54,7 +54,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics:22.0.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     implementation("com.google.android.gms:play-services-auth:21.1.1")
-    implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("androidx.coordinatorlayout:coordinatorlayout:1.2.0")

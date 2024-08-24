@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -20,11 +21,6 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,39 +31,25 @@ import retrofit2.Response;
 
 public class MapFragment extends Fragment {
 
-    private MapView mapView;
+    private WebView webView;
     private SearchView searchView;
     private Spinner filterSpinner;
-    private BottomNavigationView bottomNavigationView;
     private RecyclerView recyclerView;
     private SearchResultsAdapter adapter;
+    private List<SearchResult> allSearchResults = new ArrayList<>(); // Store all results
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        // Set the user agent value to avoid getting blocked by the OSM servers
-        Configuration.getInstance().setUserAgentValue(getActivity().getPackageName());
-
-        mapView = view.findViewById(R.id.mapView);
+        webView = view.findViewById(R.id.mapView);
         searchView = view.findViewById(R.id.searchView);
         filterSpinner = view.findViewById(R.id.filterSpinner);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        mapView.setTileSource(TileSourceFactory.MAPNIK);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setMultiTouchControls(true);
-
-        GeoPoint startPoint = new GeoPoint(14.5186, 121.0182);
-        mapView.getController().setZoom(15.0);
-        mapView.getController().setCenter(startPoint);
-
-        Marker startMarker = new Marker(mapView);
-        startMarker.setPosition(startPoint);
-        startMarker.setTitle("Marker in Pasay");
-        mapView.getOverlays().add(startMarker);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl("file:///android_asset/map.html");
 
         setupSearch();
         setupFilters();
@@ -83,7 +65,6 @@ public class MapFragment extends Fragment {
 
         customizeSearchView();
 
-        // Return the view
         return view;
     }
 
@@ -123,8 +104,11 @@ public class MapFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<SearchResult> results = response.body();
                     if (results != null && !results.isEmpty()) {
+                        allSearchResults.clear();
+                        allSearchResults.addAll(results);
                         adapter.updateSearchResults(results);
                         recyclerView.setVisibility(View.VISIBLE);
+                        applyFilter(filterSpinner.getSelectedItem().toString()); // Apply current filter
                     } else {
                         Toast.makeText(getActivity(), "No results found", Toast.LENGTH_SHORT).show();
                     }
@@ -136,9 +120,7 @@ public class MapFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void setupFilters() {
+    }private void setupFilters() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.filter_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -158,49 +140,49 @@ public class MapFragment extends Fragment {
     }
 
     private void applyFilter(String filter) {
-        mapView.getOverlays().clear();
+        webView.evaluateJavascript("clearMarkers();", null); // Clear existing markers
 
+        List<SearchResult> filteredResults = new ArrayList<>();
         if (filter.equals("All")) {
-            // Add all markers
-        } else if (filter.equals("Restaurants")) {
-            // Add restaurant markers
-        } else if (filter.equals("Parks")) {
-            // Add park markers
+            filteredResults.addAll(allSearchResults);
+        } else {
+            // Implement your filtering logic here based on 'filter'
+            // For example, if you have a 'type' property in SearchResult:
+            for (SearchResult result : allSearchResults) {
+                // if (result.getType().equals(filter)) {
+                //     filteredResults.add(result);
+                // }
+            }
         }
 
-        mapView.invalidate();
+        for (SearchResult result : filteredResults) {
+            displayLocationOnMap(result);
+        }
     }
 
     private void displayLocationOnMap(SearchResult searchResult) {
         double latitude = Double.parseDouble(searchResult.getLatitude());
         double longitude = Double.parseDouble(searchResult.getLongitude());
-        GeoPoint point = new GeoPoint(latitude, longitude);
 
-        Marker marker = new Marker(mapView);
-        marker.setPosition(point);
-        marker.setTitle(searchResult.getDisplayName());
-        mapView.getOverlays().add(marker);
-
-        mapView.getController().setCenter(point);
-        mapView.getController().setZoom(15.0);
+        webView.evaluateJavascript("addMarker(" + latitude + ", " + longitude + ", '" +
+                searchResult.getDisplayName() + "');", null);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView.onResume();
+        webView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
+        webView.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDetach(); // Detach the mapView
     }
 
     @Override
