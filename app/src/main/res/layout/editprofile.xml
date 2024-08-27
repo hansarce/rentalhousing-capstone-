@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginBottom="40dp"
-                    android:hint="Birthday"
+                    android:editable="false"
                     android:inputType="date"
                     android:background="@drawable/strokeonly"
                     android:padding="10dp" />

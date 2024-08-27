@@ -1,35 +1,34 @@
 package com.example.rentalhousing;
-// PinCircleView.java
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class pincirvleview extends View {
+public class PinCircleView extends View {
     private int numCircles = 4; // Default number of circles
     private int filledCircles = 0;
-    private float radius = 20f; // Default radius of the circles
-    private float spacing = 40f; // Default spacing between circles
+    private float radius = 35f; // Default radius of the circles
+    private float spacing = 60f; // Default spacing between circles
     private Paint emptyCirclePaint;
     private Paint filledCirclePaint;
 
-    public pincirvleview(Context context) {
+    public PinCircleView(Context context) {
         super(context);
         init();
     }
 
-    public pincirvleview(Context context, AttributeSet attrs) {
+    public PinCircleView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public pincirvleview(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PinCircleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    public pincirvleview(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public PinCircleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
@@ -76,6 +75,16 @@ public class pincirvleview extends View {
 
     public void setFilledCircles(int filledCircles) {
         this.filledCircles = filledCircles;
+        invalidate();
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+        invalidate();
+    }
+
+    public void setSpacing(float spacing) {
+        this.spacing = spacing;
         invalidate();
     }
 }

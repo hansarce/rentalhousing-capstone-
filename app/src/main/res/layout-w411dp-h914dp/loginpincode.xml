@@ -9,24 +9,25 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/inner_constraint_layout"
-        android:layout_width="436dp"
-        android:layout_height="278dp"
+        android:layout_width="484dp"
+        android:layout_height="327dp"
         android:background="@color/text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.example.rentalhousing.pincirvleview
+        <com.example.rentalhousing.PinCircleView
             android:id="@+id/pinCircleView"
             android:layout_width="202dp"
             android:layout_height="65dp"
             android:layout_centerInParent="true"
-            android:layout_marginEnd="116dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/status_text_view"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.448" />
+
 
         <TextView
             android:id="@+id/status_text_view"
@@ -36,14 +37,14 @@
             android:gravity="center"
             android:text="Enter Your Pincode"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="30dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.716" />
-
+            app:layout_constraintVertical_bias="0.648" />
 
         <EditText
             android:id="@+id/pin_code_edit_text"
@@ -69,8 +70,8 @@
 
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="900px"
-            android:layout_height="330px"
+            android:layout_width="362dp"
+            android:layout_height="138dp"
             android:background="@color/text_primary"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/status_text_view"
@@ -86,11 +87,11 @@
     <Button
         android:id="@+id/btn_1"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="1"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintEnd_toStartOf="@+id/btn_2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inner_constraint_layout"
@@ -102,11 +103,11 @@
     <Button
         android:id="@+id/btn_2"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="2"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/inner_constraint_layout"
         app:layout_constraintStart_toEndOf="@id/btn_1"
         app:layout_constraintEnd_toStartOf="@+id/btn_3"
@@ -116,11 +117,11 @@
     <Button
         android:id="@+id/btn_3"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="3"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/inner_constraint_layout"
         app:layout_constraintStart_toEndOf="@id/btn_2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,11 +131,11 @@
     <Button
         android:id="@+id/btn_4"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="4"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/btn_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_5"
@@ -144,11 +145,11 @@
     <Button
         android:id="@+id/btn_5"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="5"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/btn_2"
         app:layout_constraintStart_toEndOf="@id/btn_4"
         app:layout_constraintEnd_toStartOf="@+id/btn_6"
@@ -158,11 +159,11 @@
     <Button
         android:id="@+id/btn_6"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="6"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/btn_3"
         app:layout_constraintStart_toEndOf="@id/btn_5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -172,11 +173,11 @@
     <Button
         android:id="@+id/btn_7"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="7"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/btn_4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_8"
@@ -186,11 +187,11 @@
     <Button
         android:id="@+id/btn_8"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="8"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/btn_5"
         app:layout_constraintStart_toEndOf="@id/btn_7"
         app:layout_constraintEnd_toStartOf="@+id/btn_9"
@@ -200,11 +201,11 @@
     <Button
         android:id="@+id/btn_9"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="9"
         android:textStyle="bold"
-        android:textSize="28sp"
+        android:textSize="38sp"
         app:layout_constraintTop_toBottomOf="@id/btn_6"
         app:layout_constraintStart_toEndOf="@id/btn_8"
         app:layout_constraintEnd_toEndOf="parent"
@@ -214,7 +215,7 @@
     <Button
         android:id="@+id/btn_star"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:text="*"
         android:textSize="24sp"
         android:visibility="invisible"
@@ -228,10 +229,10 @@
     <Button
         android:id="@+id/btn_0"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="0"
-        android:textSize="28sp"
+        android:textSize="38sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_del"
@@ -244,10 +245,10 @@
     <Button
         android:id="@+id/btn_del"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
         android:background="@color/white"
         android:text="DEL"
-        android:textSize="28sp"
+        android:textSize="38sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -260,10 +261,11 @@
 
     <Button
         android:id="@+id/helpcenter"
-        android:layout_width="198dp"
-        android:layout_height="95dp"
+        android:layout_width="236dp"
+        android:layout_height="107dp"
         android:background="@color/white"
         android:text="Use Biotmetrics"
+        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/forgotmpin"
         app:layout_constraintHorizontal_bias="0.0"
@@ -273,9 +275,10 @@
 
     <Button
         android:id="@+id/forgotmpin"
-        android:layout_width="198dp"
-        android:layout_height="95dp"
+        android:layout_width="217dp"
+        android:layout_height="106dp"
         android:background="@color/white"
+        android:textSize="18dp"
         android:text="Forgot MPIN?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

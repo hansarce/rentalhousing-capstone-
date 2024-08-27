@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/inner_constraint_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="394dp"
+        android:layout_height="331dp"
         android:background="@color/text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.514"
@@ -19,15 +19,14 @@
 
         <com.example.rentalhousing.pincirvleview
             android:id="@+id/pinCircleView"
-            android:layout_width="271dp"
-            android:layout_height="65dp"
-            android:layout_centerInParent="true"
-            android:layout_marginEnd="76dp"
-            android:paddingLeft="95dp"
+            android:layout_width="107dp"
+            android:layout_height="73dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/firstinput"
             app:layout_constraintVertical_bias="0.384" />
+
         <TextView
             android:id="@+id/firstinput"
             android:layout_width="match_parent"
@@ -71,7 +70,7 @@
     <Button
         android:id="@+id/btn_1"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="1"
         android:textStyle="bold"
@@ -87,7 +86,7 @@
     <Button
         android:id="@+id/btn_2"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="2"
         android:textStyle="bold"
@@ -101,7 +100,7 @@
     <Button
         android:id="@+id/btn_3"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="3"
         android:textStyle="bold"
@@ -115,7 +114,7 @@
     <Button
         android:id="@+id/btn_4"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="4"
         android:textStyle="bold"
@@ -129,7 +128,7 @@
     <Button
         android:id="@+id/btn_5"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="5"
         android:textStyle="bold"
@@ -143,7 +142,7 @@
     <Button
         android:id="@+id/btn_6"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="6"
         android:textStyle="bold"
@@ -157,7 +156,7 @@
     <Button
         android:id="@+id/btn_7"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="7"
         android:textStyle="bold"
@@ -171,7 +170,7 @@
     <Button
         android:id="@+id/btn_8"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="8"
         android:textStyle="bold"
@@ -185,7 +184,7 @@
     <Button
         android:id="@+id/btn_9"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="9"
         android:textStyle="bold"
@@ -199,7 +198,7 @@
     <Button
         android:id="@+id/btn_star"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:text="*"
         android:textSize="24sp"
         android:visibility="invisible"
@@ -213,7 +212,7 @@
     <Button
         android:id="@+id/btn_0"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="0"
         android:textSize="28sp"
@@ -229,7 +228,7 @@
     <Button
         android:id="@+id/btn_del"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:background="@color/white"
         android:text="DEL"
         android:textSize="28sp"
