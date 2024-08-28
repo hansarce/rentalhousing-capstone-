@@ -167,7 +167,7 @@
         android:layout_width="159dp"
         android:layout_height="54dp"
         android:text="Next"
-        android:background="@drawable/greenroundedstroke"
+        android:background="@drawable/grayroundedstroke"
         android:textColor="@color/white"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -219,6 +219,7 @@
     <HorizontalScrollView
         android:layout_width="900dp"
         android:layout_height="162dp"
+        android:paddingLeft="20dp"
         tools:layout_editor_absoluteX="6dp"
         tools:layout_editor_absoluteY="72dp"
         tools:ignore="MissingConstraints">
@@ -226,7 +227,49 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:orientation="horizontal">
+
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="162dp"
+                android:src="@drawable/image1"
+                android:scaleType="centerCrop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="162dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image2"
+                android:layout_marginStart="20dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+               />
+
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="162dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image3"
+                android:layout_marginStart="20dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+              />
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="162dp"
+                android:layout_marginStart="20dp"
+                android:scaleType="centerCrop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+               />
+
+
+
+        </LinearLayout>
+
     </HorizontalScrollView>
 
     <Button

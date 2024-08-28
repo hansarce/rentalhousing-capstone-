@@ -64,6 +64,7 @@ dependencies {
     implementation ("androidx.biometric:biometric:1.1.0")
     implementation ("com.google.android.gms:play-services-auth:21.2.0")
     implementation ("com.google.android.gms:play-services-auth-api-phone:18.0.1")
+    implementation ("org.maplibre.gl:android-sdk:10.0.2")
 
 
 }

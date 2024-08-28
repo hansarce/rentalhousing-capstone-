@@ -26,7 +26,7 @@
         android:layout_height="54dp"
         android:text="Next"
         android:elevation="10dp"
-        android:background="@drawable/greenroundedstroke"
+        android:background="@drawable/grayroundedstroke"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

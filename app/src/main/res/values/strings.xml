@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">RentalHousing</string>
-    <string name="default_web_client_id">128275592770-cnd4m23rjmf783to3a3vbgpq7vbv2iet.apps.googleusercontent.com</string>
+    <string name="default_web_client_id">128275592770-nvbkq71me95seci5365fv5s8t1uvu4s6.apps.googleusercontent.com</string>
     <string-array name="filter_options">
         <item>All</item>
         <item>Restaurants</item>
