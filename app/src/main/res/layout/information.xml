@@ -129,7 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="210dp"
-
+                android:textStyle="bold"
                 android:text="Totoy's Rental Housing"
                 android:textSize="25sp" />
 
@@ -147,12 +147,69 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-
-                android:text="10-7th Street, Villamor, Pasay City"
+                android:layout_marginStart="25dp"
+                android:text="Available"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/textviewviewview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+
+                android:text="AMENITIES"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/amenities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="#737373"
+                android:editable="false"
+                android:paddingLeft="10dp"
+                android:background="@drawable/strokeonly"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:text="Aircon \nWifi \nParking \nPet Friendly"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
+            <TextView
+                android:id="@+id/textviewviewviewwwww"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+
+                android:text="DESCRIPTION"
+
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="#737373"
+                android:paddingLeft="10dp"
+                android:editable="false"
+                android:background="@drawable/strokeonly"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:text="Curfew hours is 7-5 and bawal ang boys! kaya go away "
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </LinearLayout>

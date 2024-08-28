@@ -129,14 +129,56 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.368"
-        tools:layout_editor_absoluteX="-42dp"
+        android:paddingLeft="20dp"
+
         tools:ignore="MissingConstraints">
 
         <LinearLayout
-
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal" />
+            android:orientation="horizontal">
+
+
+            <ImageButton
+                android:layout_width="120dp"
+                android:layout_height="175dp"
+                android:src="@drawable/image1"
+                android:scaleType="centerCrop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+
+            <ImageButton
+                android:layout_width="120dp"
+                android:layout_height="175dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image2"
+                android:layout_marginStart="20dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+
+            <ImageButton
+                android:layout_width="120dp"
+                android:layout_height="175dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image3"
+                android:layout_marginStart="20dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+            <ImageButton
+                android:layout_width="120dp"
+                android:layout_height="175dp"
+                android:layout_marginStart="20dp"
+                android:scaleType="centerCrop"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+
+
+
+        </LinearLayout>
+
     </HorizontalScrollView>
 
     <TextView
