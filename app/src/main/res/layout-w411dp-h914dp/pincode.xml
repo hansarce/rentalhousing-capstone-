@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/inner_constraint_layout"
-        android:layout_width="470dp"
-        android:layout_height="367dp"
+        android:layout_width="441dp"
+        android:layout_height="319dp"
         android:background="@color/text_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.514"
@@ -19,8 +19,8 @@
 
         <com.example.rentalhousing.PinCircleView
             android:id="@+id/pinCircleView"
-            android:layout_width="181dp"
-            android:layout_height="71dp"
+            android:layout_width="218dp"
+            android:layout_height="72dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +71,7 @@
     <Button
         android:id="@+id/btn_1"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="1"
@@ -88,7 +88,7 @@
     <Button
         android:id="@+id/btn_2"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="2"
@@ -103,7 +103,7 @@
     <Button
         android:id="@+id/btn_3"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="3"
@@ -118,7 +118,7 @@
     <Button
         android:id="@+id/btn_4"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="4"
@@ -133,7 +133,7 @@
     <Button
         android:id="@+id/btn_5"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="5"
@@ -148,7 +148,7 @@
     <Button
         android:id="@+id/btn_6"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="6"
@@ -163,7 +163,7 @@
     <Button
         android:id="@+id/btn_7"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="7"
@@ -178,7 +178,7 @@
     <Button
         android:id="@+id/btn_8"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="8"
@@ -193,7 +193,7 @@
     <Button
         android:id="@+id/btn_9"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="9"
@@ -208,7 +208,7 @@
     <Button
         android:id="@+id/btn_star"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:text="*"
 
@@ -223,7 +223,7 @@
     <Button
         android:id="@+id/btn_0"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="0"
@@ -240,7 +240,7 @@
     <Button
         android:id="@+id/btn_del"
         android:layout_width="0dp"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:textSize="38sp"
         android:background="@color/white"
         android:text="DEL"

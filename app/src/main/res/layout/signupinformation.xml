@@ -35,7 +35,7 @@
             android:layout_height="189dp"
             android:layout_gravity="center"
             android:layout_marginTop="36dp"
-            android:background="@drawable/circular_bg"
+
             android:src="@drawable/baseline_account_circle_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -146,7 +146,7 @@
             tools:layout_editor_absoluteX="40dp" />
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/sgcontactnumber"
             android:layout_width="349dp"
             android:layout_height="46dp"
             android:layout_marginTop="16dp"

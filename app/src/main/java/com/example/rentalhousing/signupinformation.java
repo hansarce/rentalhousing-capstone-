@@ -40,7 +40,7 @@ public class signupinformation extends AppCompatActivity {
     private Button dateButton;
     private Button saveChangesButton;
     private ImageView profilePicImageView;
-    private EditText nameEditText;
+    private EditText nameEditText, contactNumberEditText;
 
     private Uri profileImageUri;
 
@@ -64,6 +64,7 @@ public class signupinformation extends AppCompatActivity {
         saveChangesButton = findViewById(R.id.buttonSaveChanges);
         profilePicImageView = findViewById(R.id.profilepicsg);
         nameEditText = findViewById(R.id.sgname);
+        contactNumberEditText = findViewById(R.id.sgcontactnumber); // Contact number field
 
         // Set click listener for date picker button
         dateButton.setOnClickListener(this::openDatePicker);
@@ -128,17 +129,18 @@ public class signupinformation extends AppCompatActivity {
     private void saveProfileInformation() {
         String name = nameEditText.getText().toString().trim();
         String birthday = dateButton.getText().toString().trim();
+        String contactNumber = contactNumberEditText.getText().toString().trim();
 
-        if (name.isEmpty() || birthday.isEmpty()) {
+        if (name.isEmpty() || birthday.isEmpty() || contactNumber.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (currentUser != null) {
             if (profileImageUri != null) {
-                uploadProfilePicture(name, birthday);
+                uploadProfilePicture(name, birthday, contactNumber);
             } else {
-                saveProfileToFirestore(name, birthday, null);
+                saveProfileToFirestore(name, birthday, contactNumber, null);
             }
         } else {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
@@ -146,7 +148,7 @@ public class signupinformation extends AppCompatActivity {
         }
     }
 
-    private void uploadProfilePicture(final String name, final String birthday) {
+    private void uploadProfilePicture(final String name, final String birthday, final String contactNumber) {
         // Create a storage reference for the profile picture
         StorageReference profilePicRef = getCurrentProfilePicStorageRef();
 
@@ -156,8 +158,8 @@ public class signupinformation extends AppCompatActivity {
                         // Get the URL of the uploaded image
                         profilePicRef.getDownloadUrl().addOnSuccessListener(uri -> {
                             String profilePicUrl = uri.toString();
-                            // Save profile information including profile pic URL to Firestore
-                            saveProfileToFirestore(name, birthday, profilePicUrl);
+
+                            saveProfileToFirestore(name, birthday, contactNumber, profilePicUrl);
                         }).addOnFailureListener(e -> {
                             Toast.makeText(signupinformation.this, "Failed to get profile picture URL", Toast.LENGTH_SHORT).show();
                             Log.e(TAG, "Failed to get profile picture URL", e);
@@ -173,11 +175,15 @@ public class signupinformation extends AppCompatActivity {
         }
     }
 
-    private void saveProfileToFirestore(String name, String birthday, String profilePicUrl) {
+    private void saveProfileToFirestore(String name, String birthday, String contactNumber, String profilePicUrl) {
         // Create a new user profile document in Firestore
         Map<String, Object> profile = new HashMap<>();
         profile.put("Name", name); // Consistent with EditProfile
         profile.put("birthday", birthday);
+        profile.put("contactNumber", contactNumber);
+
+
+
         if (profilePicUrl != null) {
             profile.put("profilePicUrl", profilePicUrl);
         }
@@ -189,7 +195,9 @@ public class signupinformation extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(signupinformation.this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Profile saved successfully!");
-                    startActivity(new Intent(signupinformation.this, pincode.class));
+                    Intent intent = new Intent(signupinformation.this, pincode.class);
+                    intent.putExtra("mobile", contactNumber);
+                    startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {

@@ -67,11 +67,11 @@ public class DashBoard extends AppCompatActivity {
             } else if (itemId == R.id.mMessages) {
                 replaceFragment(new MessageFragment());
                 return true;
-            } else if (itemId == R.id.mProfile) {
+            } else if (itemId == R.id.mRentalHousing) {
                 replaceFragment(new ProfileFragment());
                 return true;
-            } else if (itemId == R.id.mLogout) {
-              showLogoutConfirmationDialog();
+            } else if (itemId == R.id.mProfile) {
+                replaceFragment(new ProfileFragment());
               return true;
 
             }
@@ -89,26 +89,7 @@ public class DashBoard extends AppCompatActivity {
     }
 
 
-    private void showLogoutConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to log out?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    // Sign out from Firebase
-                    FirebaseAuth.getInstance().signOut();
 
-                    // Clear any stored user data (if any)
-                    clearStoredUserData();
-
-                    // Redirect to MainActivity (sign-in screen)
-                    Intent intent = new Intent(DashBoard.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                })
-                .setNegativeButton("No", null)
-                .show();
-    }
 
     private void clearStoredUserData() {
 

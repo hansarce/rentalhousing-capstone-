@@ -68,7 +68,7 @@
                 android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Verified"
+                android:text="User"
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -94,30 +94,17 @@
             app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/button5"
             android:layout_width="match_parent"
             android:layout_height="79dp"
+            android:background="@color/white"
             android:gravity=""
             android:paddingLeft="60dp"
-            android:text="Account Verify"
-            android:background="@color/white"
+            android:text="Create Rental Housing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button3" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="match_parent"
-            android:layout_height="79dp"
-            android:text="Create Rental Housing"
-            android:gravity=""
-            android:paddingLeft="60dp"
-            android:background="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4" />
 
         <Button
             android:id="@+id/button6"

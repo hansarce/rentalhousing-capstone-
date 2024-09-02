@@ -184,7 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:background="@drawable/otpbutton"
+                android:background="@drawable/grayroundedstroke"
                 android:text="@string/verify"
                 android:textColor="@color/white"
                 android:textStyle="bold"
