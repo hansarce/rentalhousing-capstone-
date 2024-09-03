@@ -1,25 +1,27 @@
 package com.example.rentalhousing;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class BiometricsActivity extends AppCompatActivity {
 
     private Switch biometricsSwitch;
-    private FirebaseFirestore firestore;
-    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
     private FirebaseUser currentUser;
 
     @Override
@@ -27,53 +29,57 @@ public class BiometricsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.biometricslogin);
 
+        // Initialize Firebase
+        db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Initialize views
         biometricsSwitch = findViewById(R.id.switch10);
-        firestore = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
+        ImageButton backButton = findViewById(R.id.bioback);
 
-        // Load the current state from Firestore
-        loadBiometricsState();
+        // Load the current state of biometrics setting
+        loadBiometricsSetting();
 
-        // Set listener for switch state changes
-        biometricsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        // Set switch listener
+        biometricsSwitch.setOnCheckedChangeListener(this::onBiometricsSwitchChanged);
+
+        // Set back button listener
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                saveBiometricsState(isChecked);
+            public void onClick(View v) {
+                // Go back to the previous activity
+                onBackPressed();
             }
         });
     }
 
-    private void loadBiometricsState() {
+    private void loadBiometricsSetting() {
         if (currentUser != null) {
-            DocumentReference docRef = firestore.collection("users").document(currentUser.getUid());
-            docRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    Boolean isBiometricsEnabled = documentSnapshot.getBoolean("biometricsEnabled");
-                    if (isBiometricsEnabled != null) {
-                        biometricsSwitch.setChecked(isBiometricsEnabled);
-                    }
-                }
-            }).addOnFailureListener(e ->
-                    Toast.makeText(BiometricsActivity.this, "Failed to load biometrics state", Toast.LENGTH_SHORT).show()
-            );
+            db.collection("users")
+                    .document(currentUser.getUid())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Boolean biometricsEnabled = documentSnapshot.getBoolean("biometricsEnabled");
+                            if (biometricsEnabled != null) {
+                                biometricsSwitch.setChecked(biometricsEnabled);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(BiometricsActivity.this, "Failed to load settings", Toast.LENGTH_SHORT).show());
         }
     }
 
-    private void saveBiometricsState(boolean isEnabled) {
+    private void onBiometricsSwitchChanged(CompoundButton buttonView, boolean isChecked) {
         if (currentUser != null) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("biometricsEnabled", isEnabled);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("biometricsEnabled", isChecked);
 
-            firestore.collection("users").document(currentUser.getUid())
-                    .set(data)
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(BiometricsActivity.this, "Biometrics state saved", Toast.LENGTH_SHORT).show()
-                    )
-                    .addOnFailureListener(e ->
-                            Toast.makeText(BiometricsActivity.this, "Failed to save biometrics state", Toast.LENGTH_SHORT).show()
-                    );
+            db.collection("users")
+                    .document(currentUser.getUid())
+                    .update(updates)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(BiometricsActivity.this, "Biometrics setting updated", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(BiometricsActivity.this, "Failed to update setting", Toast.LENGTH_SHORT).show());
         }
     }
 }
-

@@ -78,6 +78,10 @@ public class signupinformation extends AppCompatActivity {
 
     private void initDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
+            if (year >= 2013) {
+                Toast.makeText(this, "Year must be 2012 or earlier", Toast.LENGTH_SHORT).show();
+                return;
+            }
             month = month + 1;
             String date = makeDateString(day, month, year);
             dateButton.setText(date);
@@ -131,17 +135,44 @@ public class signupinformation extends AppCompatActivity {
         String birthday = dateButton.getText().toString().trim();
         String contactNumber = contactNumberEditText.getText().toString().trim();
 
-        if (name.isEmpty() || birthday.isEmpty() || contactNumber.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        // Check if the name field is empty
+        if (name.isEmpty()) {
+            nameEditText.setError("Name is required");
+            nameEditText.requestFocus();
             return;
         }
 
+        // Check if the birthday field is empty or invalid
+        if (birthday.isEmpty() || birthday.equals("Select Date")) {
+            Toast.makeText(this, "Birthday is required", Toast.LENGTH_SHORT).show();
+            dateButton.requestFocus();
+            return;
+        }
+
+        // Extract year from the birthday string and validate it
+        int selectedYear = Integer.parseInt(birthday.split("/")[2]);
+        if (selectedYear >= 2013) {
+            Toast.makeText(this, "Year must be 2012 or earlier", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if the contact number field is empty
+        if (contactNumber.isEmpty()) {
+            contactNumberEditText.setError("Contact number is required");
+            contactNumberEditText.requestFocus();
+            return;
+        }
+
+        // Check if the profile picture is selected
+        if (profileImageUri == null) {
+            Toast.makeText(this, "Profile picture is required", Toast.LENGTH_SHORT).show();
+            profilePicImageView.requestFocus();
+            return;
+        }
+
+        // Proceed if all fields are filled and valid
         if (currentUser != null) {
-            if (profileImageUri != null) {
-                uploadProfilePicture(name, birthday, contactNumber);
-            } else {
-                saveProfileToFirestore(name, birthday, contactNumber, null);
-            }
+            uploadProfilePicture(name, birthday, contactNumber);
         } else {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "User not authenticated");
@@ -178,11 +209,9 @@ public class signupinformation extends AppCompatActivity {
     private void saveProfileToFirestore(String name, String birthday, String contactNumber, String profilePicUrl) {
         // Create a new user profile document in Firestore
         Map<String, Object> profile = new HashMap<>();
-        profile.put("Name", name); // Consistent with EditProfile
+        profile.put("Name", name);
         profile.put("birthday", birthday);
         profile.put("contactNumber", contactNumber);
-
-
 
         if (profilePicUrl != null) {
             profile.put("profilePicUrl", profilePicUrl);

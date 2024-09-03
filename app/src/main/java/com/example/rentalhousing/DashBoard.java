@@ -71,7 +71,7 @@ public class DashBoard extends AppCompatActivity {
                 replaceFragment(new ProfileFragment());
                 return true;
             } else if (itemId == R.id.mProfile) {
-                replaceFragment(new ProfileFragment());
+                replaceFragment(new BlankFragment());
               return true;
 
             }
