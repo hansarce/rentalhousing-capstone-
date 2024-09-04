@@ -64,7 +64,20 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
         public void bind(final SearchResult searchResult, final OnItemClickListener listener) {
             placeName.setText(searchResult.getDisplayName());
-            placeCoordinates.setText("Lat: " + searchResult.getLatitude() + ", Lon: " + searchResult.getLongitude());
+
+            // Display address details
+            String details = "";
+            if (searchResult.getAddress() != null) {
+                SearchResult.Address address = searchResult.getAddress();
+                details = address.getRoad() + ", " +
+                        address.getSuburb() + ", " +
+                        address.getCity() + ", " +
+                        address.getState() + ", " +
+                        address.getCountry() + ", " +
+                        address.getPostcode();
+            }
+            placeCoordinates.setText(details);
+
             itemView.setOnClickListener(v -> listener.onItemClick(searchResult));
         }
     }

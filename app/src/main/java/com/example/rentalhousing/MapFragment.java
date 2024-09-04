@@ -13,7 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.caverock.androidsvg.BuildConfig;
+
 import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -44,9 +47,12 @@ public class MapFragment extends Fragment {
         mapView.setMultiTouchControls(true);
         mapView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
+        // Set User-Agent for OSM
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
         IMapController mapController = mapView.getController();
-        mapController.setZoom(15.0);
-        GeoPoint startPoint = new GeoPoint(14.5995, 120.9842); // Default coordinates
+        mapController.setZoom(16.5);
+        GeoPoint startPoint = new GeoPoint(14.526188, 121.015552); // Default coordinates
         mapController.setCenter(startPoint);
 
         filterSpinner = view.findViewById(R.id.filterSpinner); // Initialize filterSpinner
@@ -58,11 +64,10 @@ public class MapFragment extends Fragment {
         return view;
     }
 
-
-
     private void displayLocationOnMap(SearchResult searchResult) {
-        double latitude = Double.parseDouble(searchResult.getLatitude());
-        double longitude = Double.parseDouble(searchResult.getLongitude());
+        // Example static coordinates (replace with actual logic if needed)
+        double latitude = 14.5995; // Example latitude
+        double longitude = 120.9842; // Example longitude
 
         Marker marker = new Marker(mapView);
         marker.setPosition(new GeoPoint(latitude, longitude));
@@ -71,6 +76,7 @@ public class MapFragment extends Fragment {
 
         mapView.invalidate();  // Refresh the map to show the marker
     }
+
 
     private void applyFilter(String filter) {
         mapView.getOverlays().clear();  // Clear existing markers

@@ -11,7 +11,7 @@ public interface NominatimApiService {
     Call<List<SearchResult>> search(
             @Query("q") String query,
             @Query("format") String format,
-            @Query("addressdetails") int addressDetails,
+            @Query("addressdetails") int addressDetails,  // 1 for detailed address
             @Query("limit") int limit
     );
 }
