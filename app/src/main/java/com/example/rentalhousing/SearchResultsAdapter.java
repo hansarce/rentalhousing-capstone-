@@ -8,14 +8,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.rentalhousing.SearchResult;
-
 import java.util.List;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder> {
 
     private List<SearchResult> searchResults;
-    private OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(SearchResult searchResult);
@@ -35,24 +33,28 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SearchResult searchResult = searchResults.get(position);
-        holder.bind(searchResult, listener);
+        if (searchResults != null && position < searchResults.size()) {
+            SearchResult searchResult = searchResults.get(position);
+            holder.bind(searchResult, listener);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return searchResults.size();
+        return (searchResults != null) ? searchResults.size() : 0;
     }
 
     public void updateSearchResults(List<SearchResult> newResults) {
-        searchResults.clear();
-        searchResults.addAll(newResults);
-        notifyDataSetChanged();
+        if (newResults != null) {
+            searchResults.clear();
+            searchResults.addAll(newResults);
+            notifyDataSetChanged();
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView placeName;
-        private TextView placeCoordinates;
+        private final TextView placeName;
+        private final TextView placeCoordinates;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,12 +65,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         public void bind(final SearchResult searchResult, final OnItemClickListener listener) {
             placeName.setText(searchResult.getDisplayName());
             placeCoordinates.setText("Lat: " + searchResult.getLatitude() + ", Lon: " + searchResult.getLongitude());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(searchResult);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(searchResult));
         }
     }
 }

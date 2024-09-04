@@ -1,26 +1,23 @@
 package com.example.rentalhousing;
 
-import android.graphics.Color;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.appcompat.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,97 +28,67 @@ import retrofit2.Response;
 
 public class MapFragment extends Fragment {
 
-    private WebView webView;
+    private MapView mapView;
     private SearchView searchView;
     private Spinner filterSpinner;
-    private RecyclerView recyclerView;
-    private SearchResultsAdapter adapter;
-    private List<SearchResult> allSearchResults = new ArrayList<>(); // Store all results
+    private final List<SearchResult> allSearchResults = new ArrayList<>();
 
+    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        webView = view.findViewById(R.id.mapView);
-        searchView = view.findViewById(R.id.searchView);
-        filterSpinner = view.findViewById(R.id.filterSpinner);
-        recyclerView = view.findViewById(R.id.recyclerView);
+        mapView = view.findViewById(R.id.mapView);
+        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        mapView.setMultiTouchControls(true);
+        mapView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/map.html");
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(15.0);
+        GeoPoint startPoint = new GeoPoint(14.5995, 120.9842); // Default coordinates
+        mapController.setCenter(startPoint);
 
-        setupSearch();
-        setupFilters();
+        filterSpinner = view.findViewById(R.id.filterSpinner); // Initialize filterSpinner
+        searchView = view.findViewById(R.id.searchView); // Initialize searchView
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new SearchResultsAdapter(new ArrayList<>(), new SearchResultsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(SearchResult searchResult) {
-                displayLocationOnMap(searchResult);
-            }
-        });
-        recyclerView.setAdapter(adapter);
-
-        customizeSearchView();
+        setupFilters(); // Setup filter spinner
+        setupSearch(); // Setup search view
 
         return view;
     }
 
-    private void customizeSearchView() {
-        int searchViewTextColor = Color.BLACK;
-        int searchViewHintColor = Color.GRAY;
 
-        EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        if (searchEditText != null) {
-            searchEditText.setTextColor(searchViewTextColor);
-            searchEditText.setHintTextColor(searchViewHintColor);
+
+    private void displayLocationOnMap(SearchResult searchResult) {
+        double latitude = Double.parseDouble(searchResult.getLatitude());
+        double longitude = Double.parseDouble(searchResult.getLongitude());
+
+        Marker marker = new Marker(mapView);
+        marker.setPosition(new GeoPoint(latitude, longitude));
+        marker.setTitle(searchResult.getDisplayName());
+        mapView.getOverlays().add(marker);
+
+        mapView.invalidate();  // Refresh the map to show the marker
+    }
+
+    private void applyFilter(String filter) {
+        mapView.getOverlays().clear();  // Clear existing markers
+
+        List<SearchResult> filteredResults = new ArrayList<>();
+        if (filter.equals("All")) {
+            filteredResults.addAll(allSearchResults);
+        } else {
+            // Add your filtering logic here
+        }
+
+        for (SearchResult result : filteredResults) {
+            displayLocationOnMap(result);
         }
     }
 
-    private void setupSearch() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchLocation(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-    }
-
-    private void searchLocation(String location) {
-        NominatimApiService apiService = RetrofitClient.getClient().create(NominatimApiService.class);
-        Call<List<SearchResult>> call = apiService.search(location, "json", 1, 10);
-
-        call.enqueue(new Callback<List<SearchResult>>() {
-            @Override
-            public void onResponse(Call<List<SearchResult>> call, Response<List<SearchResult>> response) {
-                if (response.isSuccessful()) {
-                    List<SearchResult> results = response.body();
-                    if (results != null && !results.isEmpty()) {
-                        allSearchResults.clear();
-                        allSearchResults.addAll(results);
-                        adapter.updateSearchResults(results);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        applyFilter(filterSpinner.getSelectedItem().toString()); // Apply current filter
-                    } else {
-                        Toast.makeText(getActivity(), "No results found", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<SearchResult>> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }private void setupFilters() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+    private void setupFilters() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(),
                 R.array.filter_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         filterSpinner.setAdapter(adapter);
@@ -139,45 +106,59 @@ public class MapFragment extends Fragment {
         });
     }
 
-    private void applyFilter(String filter) {
-        webView.evaluateJavascript("clearMarkers();", null); // Clear existing markers
+    private void setupSearch() {
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchLocation(query);
+                    return false;
+                }
 
-        List<SearchResult> filteredResults = new ArrayList<>();
-        if (filter.equals("All")) {
-            filteredResults.addAll(allSearchResults);
-        } else {
-            // Implement your filtering logic here based on 'filter'
-            // For example, if you have a 'type' property in SearchResult:
-            for (SearchResult result : allSearchResults) {
-                // if (result.getType().equals(filter)) {
-                //     filteredResults.add(result);
-                // }
-            }
-        }
-
-        for (SearchResult result : filteredResults) {
-            displayLocationOnMap(result);
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
         }
     }
 
-    private void displayLocationOnMap(SearchResult searchResult) {
-        double latitude = Double.parseDouble(searchResult.getLatitude());
-        double longitude = Double.parseDouble(searchResult.getLongitude());
+    private void searchLocation(String location) {
+        NominatimApiService apiService = RetrofitClient.getClient().create(NominatimApiService.class);
+        Call<List<SearchResult>> call = apiService.search(location, "json", 1, 10);
 
-        webView.evaluateJavascript("addMarker(" + latitude + ", " + longitude + ", '" +
-                searchResult.getDisplayName() + "');", null);
+        call.enqueue(new Callback<List<SearchResult>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<SearchResult>> call, @NonNull Response<List<SearchResult>> response) {
+                if (response.isSuccessful()) {
+                    List<SearchResult> results = response.body();
+                    if (results != null && !results.isEmpty()) {
+                        allSearchResults.clear();
+                        allSearchResults.addAll(results);
+                        applyFilter(filterSpinner.getSelectedItem().toString()); // Apply current filter
+                    } else {
+                        Toast.makeText(getActivity(), "No results found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<SearchResult>> call, @NonNull Throwable t) {
+                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        webView.onResume();
+        mapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        webView.onPause();
+        mapView.onPause();
     }
 
     @Override
