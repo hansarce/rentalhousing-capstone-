@@ -37,7 +37,7 @@ public class EditProfile extends AppCompatActivity {
 
     private ImageView returnButton;
     private ImageView profilePic;
-    private EditText editTextEmail, editTextContactNumber, editName, editTextBirthday;
+    private EditText editTextContactNumber, editName, editTextBirthday;
 
     private String currentUserID;
 
@@ -47,13 +47,13 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.editprofile);
 
         // Initialize views
-        editTextEmail = findViewById(R.id.editTextEmail);
         editTextContactNumber = findViewById(R.id.editTextContactNumber);
         editName = findViewById(R.id.editname);
         editTextBirthday = findViewById(R.id.editTextBirthday);
         returnButton = findViewById(R.id.returntoprofile);
         profilePic = findViewById(R.id.profilepicedit);
 
+        // Get current user ID
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             currentUserID = currentUser.getUid();
@@ -63,46 +63,43 @@ public class EditProfile extends AppCompatActivity {
             return;
         }
 
+        // Fetch existing user data to populate the form
         fetchUserData();
 
+        // Set up image picker
         imagePickLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null && data.getData() != null) {
-                            selectedImageUri = data.getData();
-                            Glide.with(EditProfile.this).load(selectedImageUri).circleCrop().into(profilePic);
-                        }
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        Glide.with(EditProfile.this).load(selectedImageUri).circleCrop().into(profilePic);
                     }
                 });
 
+        // Profile picture click listener to pick an image
         profilePic.setOnClickListener(v -> {
-            ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
+            ImagePicker.with(this)
+                    .cropSquare()
+                    .compress(512)
+                    .maxResultSize(512, 512)
                     .createIntent(intent -> {
                         imagePickLauncher.launch(intent);
                         return null;
                     });
         });
 
+        // Return to Profile button
         returnButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
+            Intent intent = new Intent(getApplicationContext(), BlankFragment.class);
             startActivity(intent);
         });
 
+        // Save changes button
         Button saveButton = findViewById(R.id.buttonSaveChanges);
         saveButton.setOnClickListener(v -> uploadProfileDataToFirestore());
     }
 
-    private StorageReference getCurrentProfilePicStorageRef() {
-        if (currentUserID != null) {
-            return FirebaseStorage.getInstance().getReference().child("profile").child(currentUserID);
-        }
-        return null;
-    }
-
     private void fetchUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         if (currentUserID != null) {
             db.collection("users")
                     .document(currentUserID)
@@ -116,42 +113,50 @@ public class EditProfile extends AppCompatActivity {
 
     private void populateUserData(DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists()) {
-            editTextEmail.setText(documentSnapshot.getString("email"));
+            // Populate fields with existing data
             editName.setText(documentSnapshot.getString("Name"));
             editTextContactNumber.setText(documentSnapshot.getString("contactNumber"));
             editTextBirthday.setText(documentSnapshot.getString("birthday"));
 
-            getCurrentProfilePicStorageRef().getDownloadUrl().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Uri uri = task.getResult();
-                    Glide.with(EditProfile.this).load(uri).circleCrop().into(profilePic);
-                } else {
-                    Log.e(TAG, "Profile picture not found", task.getException());
-                    profilePic.setImageResource(R.drawable.baseline_account_circle_24);
-                }
-            }).addOnFailureListener(e -> {
-                Log.e(TAG, "Error fetching profile picture", e);
-                profilePic.setImageResource(R.drawable.baseline_account_circle_24);
-            });
+            // Load existing profile picture
+            loadProfilePicture();
         } else {
             Log.e(TAG, "Document does not exist");
         }
     }
 
+    private void loadProfilePicture() {
+        StorageReference profilePicRef = getCurrentProfilePicStorageRef();
+        if (profilePicRef != null) {
+            profilePicRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Glide.with(this)
+                        .load(uri)
+                        .circleCrop()
+                        .placeholder(R.drawable.baseline_account_circle_24)
+                        .error(R.drawable.baseline_account_circle_24)
+                        .into(profilePic);
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to fetch profile picture", e);
+                profilePic.setImageResource(R.drawable.baseline_account_circle_24);
+            });
+        } else {
+            Log.e(TAG, "Profile picture reference is null");
+            profilePic.setImageResource(R.drawable.baseline_account_circle_24);
+        }
+    }
+
     private void uploadProfileDataToFirestore() {
-        String email = editTextEmail.getText().toString().trim();
         String edtname = editName.getText().toString().trim();
         String contactNumber = editTextContactNumber.getText().toString().trim();
         String birthday = editTextBirthday.getText().toString().trim();
 
-        if (email.isEmpty() || edtname.isEmpty() || contactNumber.isEmpty() || birthday.isEmpty()) {
+        if (edtname.isEmpty() || contactNumber.isEmpty() || birthday.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Save profile text data first
         Map<String, Object> userData = new HashMap<>();
-        userData.put("email", email);
         userData.put("Name", edtname);
         userData.put("contactNumber", contactNumber);
         userData.put("birthday", birthday);
@@ -180,7 +185,7 @@ public class EditProfile extends AppCompatActivity {
             }
         } else {
             // If no new image is selected, just go back to the profile
-            Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
+            Intent intent = new Intent(getApplicationContext(), BlankFragment.class);
             startActivity(intent);
         }
     }
@@ -196,12 +201,23 @@ public class EditProfile extends AppCompatActivity {
                     .set(user, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {
                         Log.d(TAG, "Profile pic URL saved to Firestore");
-                        Intent intent = new Intent(getApplicationContext(), ProfileFragment.class);
+                        Intent intent = new Intent(getApplicationContext(), BlankFragment.class);
                         startActivity(intent);
                     })
                     .addOnFailureListener(e -> Log.e(TAG, "Failed to save profile pic URL to Firestore", e));
         } else {
             Log.e(TAG, "User ID is null, cannot save to Firestore");
+        }
+    }
+
+    private StorageReference getCurrentProfilePicStorageRef() {
+        if (currentUserID != null) {
+            return FirebaseStorage.getInstance().getReference()
+                    .child("profile_pictures")
+                    .child(currentUserID);
+        } else {
+            Log.e(TAG, "Current user ID is null");
+            return null;
         }
     }
 }

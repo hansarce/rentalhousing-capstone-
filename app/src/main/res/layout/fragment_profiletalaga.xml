@@ -52,7 +52,7 @@
                 app:layout_constraintVertical_bias="0.824" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="112dp"
@@ -65,7 +65,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/userstatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User"
@@ -75,7 +75,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/profilepic"
-                app:layout_constraintTop_toBottomOf="@+id/textView8"
+                app:layout_constraintTop_toBottomOf="@+id/name"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -84,7 +84,7 @@
             android:id="@+id/button3"
             android:layout_width="match_parent"
             android:layout_height="79dp"
-            android:gravity=""
+            android:gravity="center_vertical"
             android:paddingLeft="60dp"
             android:background="@color/white"
             android:text="Account"
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="79dp"
             android:background="@color/white"
-            android:gravity=""
+            android:gravity="center_vertical"
             android:paddingLeft="60dp"
             android:text="Create Rental Housing"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="79dp"
             android:background="@color/white"
-            android:gravity=""
+            android:gravity="center_vertical"
             android:paddingLeft="60dp"
             android:text="Enable Biometrics"
             app:layout_constraintEnd_toEndOf="parent"
@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="79dp"
             android:background="@color/white"
-            android:gravity=""
+            android:gravity="center_vertical"
             android:paddingLeft="60dp"
             android:text="Log out"
             app:layout_constraintEnd_toEndOf="parent"
